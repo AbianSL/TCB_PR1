@@ -1,14 +1,14 @@
 from astropy.table import Table 
-from .utils import calculate_data_masked_vim_vmax
 import matplotlib.pyplot as plt
-
+import pandas as pd
+from .csvanalyzer import CsvAnalyzer
 
 class CsvVisualizer:
     """
     A class to visualize data from a CSV file managed by CsvAnalyzer.
     """
 
-    def __init__(self, manager: DataFrame) -> None:
+    def __init__(self, manager: CsvAnalyzer) -> None: 
         self._manager = manager
         self._output_folder = "outputs/"
     
@@ -44,6 +44,9 @@ class CsvVisualizer:
         self._save_fig("rv_vs_time")
 
     def _save_fig(self, name: str, extension: str = ".png") -> None:
+        """
+        Saves the current figure to the output folder with the given name and extension.
+        """
         if name.endswith(".png"):
             extension = ""
         plt.savefig(self._output_folder + name + extension, dpi=300, bbox_inches="tight")

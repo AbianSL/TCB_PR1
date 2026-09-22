@@ -1,11 +1,16 @@
 import pandas as pd
+import numpy as np
+from pathlib import Path
 
 class CsvAnalyzer:
-    def __init__(self, file_path: Path):
+    """
+    Class to analyze CSV files containing radial velocity data.
+    """
+    def __init__(self, file_path: Path) -> None:
         self.file_path = file_path
         self.read_csv() 
 
-    def read_csv(self):
+    def read_csv(self) -> None:
         """
         Reads the CSV file and stores it in a DataFrame.
         """
@@ -14,13 +19,13 @@ class CsvAnalyzer:
         except Exception as error:
             print(f"Error reading CSV file: {error}")
 
-    def get_dataframe(self):
+    def get_dataframe(self) -> pd.DataFrame:
         """
         Returns the DataFrame.
         """
         return self.dataframe
 
-    def get_column(self, column_name):
+    def get_column(self, column_name: str) -> pd.Series:
         """
         Returns a specific column from the DataFrame.
         """
@@ -56,7 +61,7 @@ class CsvAnalyzer:
         )
         self.dataframe = self.dataframe[valid_mask].reset_index(drop=True)
 
-    def calculate_statistics(self) -> Dict[str, Tuple]:
+    def calculate_statistics(self) -> None:
         """
         Calculates and returns basic statistics (mean, std, error mean) per instrument.
         """
@@ -68,8 +73,8 @@ class CsvAnalyzer:
             std = instrument_data["RV (m/s)"].std()
             error_mean = instrument_data["err RV (m/s)"].mean()
             results[instrument] = (mean, std, error_mean)
-        return results
-    
+        self.stats=results
+       
     def get_dataframe_with_offsets(self) -> pd.DataFrame:
         """
         Returns a new DataFrame with the offsets for each instrument fixed.
@@ -87,7 +92,7 @@ class CsvAnalyzer:
         Prints a neatly formatted table in console.
         Reuses precomputed statistics if provided; computes them otherwise.
         """
-        stats = self.calculate_statistics()
+        self.calculate_statistics()
 
         col_inst = "Instrument"
         col_mean = "Mean RV (m/s)"
@@ -101,7 +106,23 @@ class CsvAnalyzer:
         print(header)
         print(separator)
 
-        for inst, (mean_val, std_val, err_val) in stats.items():
+        for inst, (mean_val, std_val, err_val) in self.stats.items():
             print(f"{inst:<12} | {mean_val:>15.3f} | {std_val:>14.3f} | {err_val:>14.3f}")
 
         print(separator + "\n")
+        
+    def get_vel(self) -> float:
+        """
+        getter for velocity
+        """
+        if not hasattr(self, "vel"):
+            self.calc_vel()        
+        return self.vel
+
+    def calc_vel(self) -> None:
+        """
+        sistemic velocity calculator
+        """
+        if not hasattr(self, "stats"):
+            self.calculate_statistics()
+        self.vel = np.mean([v[0] for v in self.stats.values() if v[0] < -1000])

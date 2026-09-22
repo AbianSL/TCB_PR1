@@ -12,10 +12,12 @@ class FitsVisualizer:
     def plot_image(self) -> None:
         data = self._manager.get_data()
         data_masked, vmin, vmax = calculate_data_masked_vim_vmax(data)
+
         plt.figure(figsize=(10, 10))
         plt.imshow(data_masked, cmap="gray", vmin=vmin, vmax=vmax) 
         plt.colorbar()
         plt.title("Image from fits file")
+
         self._save_fig("image") 
 
     def plot_spectrum(self) -> None:
