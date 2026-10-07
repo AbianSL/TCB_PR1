@@ -43,7 +43,7 @@ class FitsManager:
     def get_table(self) -> Table:
         return self._table
 
-    def get_header(self, value: int = 0) -> Header:
+    def get_header(self, value: int = 0):
         return self._hdul[value].header
    
     def get_data(self):
