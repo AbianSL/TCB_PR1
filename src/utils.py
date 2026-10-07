@@ -10,4 +10,3 @@ def calculate_data_masked_vim_vmax(data) -> tuple:
     data_masked = np.ma.masked_invalid(new_data)
     vmin, vmax = np.percentile(data[valid], [5, 95])
     return (data_masked, vmin, vmax)
-
