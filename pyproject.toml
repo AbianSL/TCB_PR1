@@ -1,0 +1,10 @@
+[project]
+name = "tcb-first"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "astropy[all]>=8.0.1",
+    "matplotlib>=3.11.2",
+]
