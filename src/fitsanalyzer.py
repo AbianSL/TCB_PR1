@@ -113,4 +113,16 @@ class FitsAnalyzer:
         for path in args:
             data = np.array(Image.open(path))
             data = (data > 127).astype(np.uint8)
-            self._mask.append(data)         
+            self._mask.append(data)
+
+    def get_centre(self, band: str) -> float:
+        """
+        Get the central wavelength of a specified band.
+        """
+        return self._bands[band][0]
+
+    def get_fwhm(self, band: str) -> float:
+        """
+        Get the full width at half maximum (FWHM) of a specified band.
+        """
+        return self._bands[band][1]
